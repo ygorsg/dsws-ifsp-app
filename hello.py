@@ -32,8 +32,8 @@ def contextorequisicao():
     return f"""
     <h1>Avaliação contínua: Aula 030</h1>
     <h2>Seu navegador é: {user_agent}</h2>
-    <h2>O Ip do computador remoto é: {ip}</h2>
-    <h2>O O host da aplicação é: {domain}</h2>
+    <h2>O IP do computador remoto é: {ip}</h2>
+    <h2>O host da aplicação é: {domain}</h2>
     <p><a href="/">Voltar</a></p>
     """
 
