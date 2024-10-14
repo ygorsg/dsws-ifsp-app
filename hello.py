@@ -1,73 +1,21 @@
-from flask import Flask, request, make_response, redirect, abort
+from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
+from datetime import datetime
+
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
+moment = Moment(app)
 
 @app.route('/')
-def home():
-    return """
-    <h1>Avaliação contínua: Aula 030</h1>
-    <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/user/Ygor Gonçalves/PT3025411/IFSP">Identificação</a></li>
-    <li><a href="/contextorequisicao">Contexto da requisição</a></li>
-    </ul>
-    """
+def index():
+   now = datetime.utcnow()
+   return render_template('index.html', current_time=now)
 
-@app.route('/user/<nome>/<prontuario>/<instituicao>')
-def identificacao(nome,prontuario,instituicao):
-    return f"""
-    <h1>Avaliação contínua: Aula 030</h1>
-    <h2>Aluno: {nome}</h2>
-    <h2>Prontuário: {prontuario}</h2>
-    <h2>Instituição: {instituicao}</h2>
-    <p><a href="/">Voltar</a></p>
-    """
+@app.route('/user/<name>')
+def user(name):
+    return render_template('user.html', name=name)
 
-@app.route('/contextorequisicao')
-def contextorequisicao():
-    user_agent = request.headers.get('User-Agent')
-    # ip = request.remote_addr
-    ip = request.environ['REMOTE_ADDR']
-    # domain = request.url_root  exibe "http://ygor.pythonanywhere.com"
-    domain = request.headers['Host'] # exibe "ygor.pythonanywhere.com"
-    return f"""
-    <h1>Avaliação contínua: Aula 030</h1>
-    <h2>Seu navegador é: {user_agent}</h2>
-    <h2>O IP do computador remoto é: {ip}</h2>
-    <h2>O host da aplicação é: {domain}</h2>
-    <p><a href="/">Voltar</a></p>
-    """
-
-# === AULA 01
-
-#@app.route('/')
-#def hello_world():
-#    return '<h1>Hello World!</h1>'
-
-#@app.route('/user/<name>')
-#def user(name):
-#    return '<h1>Hello, {}!</h1>'.format(name)
-
-#@app.route('/contextorequisicao')
-#def contextorequisicao():
-#    user_agent = request.headers.get('User-Agent')
-#    return '<p>Seu navegador é {}</p>'.format(user_agent)
-
-#@app.route('/codigostatusdiferente')
-#def codigostatusdiferente():
-#    resp = make_response("Bad request", 400)
-#    resp.headers['X'] = 'Y'
-#    return resp
-
-#@app.route('/objetoresposta')
-#def objetoresposta():
-#    resp = make_response('<h1>This document carries a cookie!</h1>')
-#    resp.set_cookie('Cookie','Ygor')
-#    return resp
-
-#@app.route('/redirecionamento')
-#def redirecionamento():
-#    return redirect("https://ptb.ifsp.edu.br/", code=302)
-
-#@app.route('/abortar')
-#def abortar():
-#    abort(404)
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
