@@ -68,7 +68,7 @@ def index():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.name.data).first()
         if user is None:
-            user = User(username=form.name.data)
+            user = User(username=form.name.data, role_id=3)
             db.session.add(user)
             db.session.commit()
             session['known'] = False
@@ -76,5 +76,6 @@ def index():
             session['known'] = True
         session['name'] = form.name.data
         return redirect(url_for('index'))
-    return render_template('index.html', form=form, name=session.get('name'),
+    users = User.query.all()
+    return render_template('index.html', form=form, name=session.get('name'), users=users,
                            known=session.get('known', False))
